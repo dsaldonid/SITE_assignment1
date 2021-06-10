@@ -1,11 +1,55 @@
 body{
-    background-color: white;
+    background-color: rgb(20, 29, 37);
 }
 
+.top-nav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.icon{
+    width: 100px;  
+    height: auto;  
+    text-align: center;  
+    padding: 15px; 
+}
 .hidden{
     display:none;
 }
 
+.loadMore{
+    display: flex;
+    justify-content: center;
+}
+
 .star{
     size: 10px;
+}
+
+h4{
+    color: white;
+}
+
+.movieArea{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.movie{
+    flex: 1;
+    flex-basis: 20%;
+    margin: 1vh 1vw 2vh 1vw;
+
+}
+.info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ratings{
+    display: flex;
+    flex-direction: row;
 }

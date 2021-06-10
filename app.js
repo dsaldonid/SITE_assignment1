@@ -1,8 +1,6 @@
 // Global constants
 const movieArea = document.querySelector(".movieArea");
 const apiKey  = "e378e77d411b157b07cbb13f2410ae82";
-const limit   = 9;
-const rating  = "g";
 let   movieId;
 const movieForm = document.querySelector("form");
 const loadButton = document.querySelector("#loadMore");
@@ -11,11 +9,18 @@ let   secureURL;
 let   movieUrls = [];
 let   movieInfo = {};
 let   page =1;
+let  numOnRow =0;
+let  movieStr = '';
+// const bar = document.querySelector("#loadMore");
 
 
 movieForm.addEventListener("submit", filter)
+movieForm.addEventListener("input",dynamicfilter)
 loadButton.addEventListener("click",loadMore)
 
+function stay(event){
+    event.preventDefault();
+}
 async function getResults(){
     // evt.preventDefault()
     //grab secure base URL
@@ -43,6 +48,33 @@ async function getResults(){
 
     //increment page once to be ready for load more 
     page++;
+}
+
+async function dynamicfilter(event){
+    //prevent reloading page when something entered
+    event.preventDefault()
+
+    //wipe page
+    setTimeout(wipeResults,0)
+
+    //grab search term
+    const movie   = event.target.value;
+    const year    = 2021
+
+    if(movie ==""){
+        page =1;
+        getResults();
+        return
+    }
+    //make api call to filter movies
+    const searchURL    = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movie}&primary_release_year=${year}`;
+    const response     = await fetch(searchURL);
+    const responseData = await response.json();
+
+    
+    //display the filtered titles
+    responseData.results.map(displayResults)
+
 }
 
 async function filter(event){
@@ -82,13 +114,27 @@ function storeInfo(movieData){
 
 function displayResults(movieData){
     let movie_pic = secureURL + photoSize+ movieData.poster_path
+    // if (numOnRow ==0){
+    //     movieArea.innerHTML+=`<div class= "movieRow">`;
+    // }
     // console.log(gifData.url)
     movieArea.innerHTML+= `
-    <img src = "${movie_pic}" alt = "${movieData.title}">
-    <h4>${movieData.title}</h4>
-    <img src = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/320/apple/285/star_2b50.png" class = "star" alt = "stars">
-    <h4>${movieData.vote_average}
+        <div class = "movie">
+        <img src = "${movie_pic}" alt = "${movieData.title}">
+        <div class = "info">
+        <h4>${movieData.title}</h4>
+        <div class = "ratings">
+        <h3>⭐</h3>
+        <h4>${movieData.vote_average}</h4>
+        </div>
+        </div>
+        </div>
     `
+    // numOnRow++;
+    // if (numOnRow ==4){
+    //     movieArea.innerHTML+=`</div>`;
+    //     numOnRow =0;
+    // }
 }
 
 function wipeResults(){

@@ -8,16 +8,17 @@
     <title>Flixster</title>
 </head>
 <body>
-    <div>
-        <img src= "https://www.flixster.com/logo/logo_Desktop.svg" onclick="window.location.reload()"> 
+    <div class = "top-nav">
+        <img src= "https://www.flixster.com/logo/logo_Desktop.svg" class ="icon" onclick="window.location.reload()"> 
         <form>
             <input type ="text" name ="movie" placeholder="Search for movies" required> 
         </form>
     </div>
     
     <div class= "movieArea"> </div>
-    <button class = "hidden" id= "loadMore">Show more movies!</button>
-    
+    <div class ="loadMore">
+        <button class = "hidden" id= "loadMore">Show more movies!</button>
+    </div>
     <script src = "app.js"></script>
 </body>
 
