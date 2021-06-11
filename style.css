@@ -100,3 +100,15 @@ h4{
   .movieName{
       color: black;
   }
+
+  button {
+    background-color: #313631; /* Green */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 10px 27px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }

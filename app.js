@@ -104,31 +104,32 @@ async function filter(event){
 
     
     //display the filtered titles
-    responseData.results.map(displayResults)
+    responseData.results.map(displayResults);
 
 }
 
 function storeInfo(movieData){
-    console.log(movieData)
     //save our movie's title,average moving votes, and picture's URL
-    let movie_pic    = secureURL + photoSize+ movieData.poster_path
-    let movie_name   = movieData.title
-    let movie_rating = movieData.vote_average
-    let movie_description = movieData.overview
-    
+    let movie_pic         = secureURL + photoSize+ movieData.poster_path;
+    let movie_name        = movieData.title;
+    let movie_rating      = movieData.vote_average;
+    let movie_description = movieData.overview;
+    let movie_id          = movieData.id;
 
     //add our movie info to object with movie name as key
-    movieInfo[movie_name] = {"picture_URL":movie_pic,"average_votes":movie_rating,"description":movie_description}
+    movieInfo[movie_name] = 
+    {
+    "picture_URL":movie_pic,
+    "average_votes":movie_rating,
+    "description":movie_description,
+    "id":movie_id
+    };
     
 }
 
 
 function displayResults(movieData){
-    let movie_pic = secureURL + photoSize+ movieData.poster_path
-    // if (numOnRow ==0){
-    //     movieArea.innerHTML+=`<div class= "movieRow">`;
-    // }
-    // console.log(gifData.url)
+    let movie_pic = secureURL + photoSize+ movieData.poster_path;
     movieArea.innerHTML+= `
         <div class = "movie modal-open">
         <img src = "${movie_pic}" class = "modal-open" alt = "${movieData.title}">
@@ -140,12 +141,7 @@ function displayResults(movieData){
         </div>
         </div>
         </div>
-    `
-    // numOnRow++;
-    // if (numOnRow ==4){
-    //     movieArea.innerHTML+=`</div>`;
-    //     numOnRow =0;
-    // }
+    `;
 }
 
 function wipeResults(){
@@ -175,10 +171,32 @@ async function loadMore(){
     page++;
 }
 
+//grab additonal movie info
+async function moreDetail(movie){
+    movieId  = movieInfo[movie].id
+    //make api call to filter movies
+    const detailURL    = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`;
+    const response     = await fetch(detailURL);
+    const responseData = await response.json();
+
+    //save additional info into movieInfo 
+    movieInfo[movie]["runtime"]      = responseData.runtime;
+    movieInfo[movie]["release_date"] = responseData.release_date;
+    movieInfo[movie]["genres"]       = responseData.genres;
+}
+
 //open and close out model
 document.addEventListener('click', function (event) {
     const movieName  = event.target.alt;
-    const pictureURL = movieInfo[event.target.alt].picture_URL;
+    moreDetail(movieName);
+    console.log(movieInfo[event.target.alt]);
+    const movieRun   = `${movieInfo[event.target.alt].runtime}`;
+    let   genreStr   = ``;
+    movieInfo[event.target.alt].genres.forEach(element => {
+        genreStr += `${element.name}`
+    });
+    console.log(genreStr);
+    
 	if (event.target.matches('.modal-open')) {
 		// Run your code to open a modal
         modal.style.display = "block";
