@@ -11,7 +11,15 @@ let   movieInfo = {};
 let   page =1;
 let  numOnRow =0;
 let  movieStr = '';
+const modalText = document.querySelector("p")
+
 // const bar = document.querySelector("#loadMore");
+// Get the modal
+var modal = document.getElementById("myModal");
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
 
 
 movieForm.addEventListener("submit", filter)
@@ -101,13 +109,16 @@ async function filter(event){
 }
 
 function storeInfo(movieData){
+    console.log(movieData)
     //save our movie's title,average moving votes, and picture's URL
     let movie_pic    = secureURL + photoSize+ movieData.poster_path
     let movie_name   = movieData.title
     let movie_rating = movieData.vote_average
+    let movie_description = movieData.overview
+    
 
     //add our movie info to object with movie name as key
-    movieInfo[movie_name] = {"picture_URL":movie_pic,"average_votes":movie_rating}
+    movieInfo[movie_name] = {"picture_URL":movie_pic,"average_votes":movie_rating,"description":movie_description}
     
 }
 
@@ -119,8 +130,8 @@ function displayResults(movieData){
     // }
     // console.log(gifData.url)
     movieArea.innerHTML+= `
-        <div class = "movie">
-        <img src = "${movie_pic}" alt = "${movieData.title}">
+        <div class = "movie modal-open">
+        <img src = "${movie_pic}" class = "modal-open" alt = "${movieData.title}">
         <div class = "info">
         <h4>${movieData.title}</h4>
         <div class = "ratings">
@@ -162,4 +173,29 @@ async function loadMore(){
 
     //increment page
     page++;
+}
+
+//open and close out model
+document.addEventListener('click', function (event) {
+    const movieName  = event.target.alt;
+    const pictureURL = movieInfo[event.target.alt].picture_URL;
+	if (event.target.matches('.modal-open')) {
+		// Run your code to open a modal
+        modal.style.display = "block";
+        modalText.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/gmRKv7n2If8" class ="embed" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        modalText.innerHTML += `<h4 class= "movieName">${movieName}</h4>`;
+        modalText.innerHTML += movieInfo[event.target.alt].description
+	}
+
+	if (event.target.matches('.modal')) {
+		// Run your code to close a modal
+        modal.style.display = "none";
+	}
+
+}, false);
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
 }
