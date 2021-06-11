@@ -1,6 +1,6 @@
 // Global constants
 const movieArea = document.querySelector(".movieArea");
-const apiKey  = "e378e77d411b157b07cbb13f2410ae82";
+const apiKey  = "enterApiKeyHere";
 let   movieId;
 const movieForm = document.querySelector("form");
 const loadButton = document.querySelector("#loadMore");
