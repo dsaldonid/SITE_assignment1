@@ -26,11 +26,8 @@ Deployed Application (optional): [https://dsaldonid.github.io/SITE_assignment1/]
 - [ ] Implement anything else that you can get done to improve the app functionality!
 
 ### Walkthough GIF
-<iframe 
-src="https://www.loom.com/share/4c380a3e5dd14e94b9229f605e526ebb" frameborder="0" 
-webkitallowfullscreen mozallowfullscreen allowfullscreen 
-style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-</iframe>
+https://www.loom.com/share/4c380a3e5dd14e94b9229f605e526eb
+
 
 ### Reflection
 
