@@ -4,7 +4,7 @@ Submitted by: Diego Saldonid
 
 Estimated time spent: 9 hours spent in total
 
-Deployed Application (optional): [Flixster Deployed Site](ADD_LINK_HERE)
+Deployed Application (optional): [https://dsaldonid.github.io/SITE_assignment1/](ADD_LINK_HERE)
 
 ### Application Features
 
