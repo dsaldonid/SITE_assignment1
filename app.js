@@ -11,20 +11,35 @@ let   movieInfo = {};
 let   page =1;
 let  numOnRow =0;
 let  movieStr = '';
-const modalText = document.querySelector("p")
-
-// const bar = document.querySelector("#loadMore");
-// Get the modal
-var modal = document.getElementById("myModal");
+const modalText = document.querySelector("p");
+const clearIcon = document.querySelector(".clear-icon");
+const searchBar = document.querySelector(".search");
+const modal = document.getElementById("myModal");
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+const btn = document.getElementById("myBtn");
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close")[0];
 
 
 movieForm.addEventListener("submit", filter)
 movieForm.addEventListener("input",dynamicfilter)
 loadButton.addEventListener("click",loadMore)
+
+searchBar.addEventListener("keyup", () => {
+    if(searchBar.value && clearIcon.style.visibility != "visible"){
+      clearIcon.style.visibility = "visible";
+    } else if(!searchBar.value) {
+      clearIcon.style.visibility = "hidden";
+    }
+  });
+
+  clearIcon.addEventListener("click", () => {
+    searchBar.value = "";
+    clearIcon.style.visibility = "hidden";
+    wipeResults();
+    page =1;
+    getResults();
+  })
 
 function stay(event){
     event.preventDefault();
@@ -124,11 +139,14 @@ function storeInfo(movieData){
     "description":movie_description,
     "id":movie_id
     };
+    moreDetail(movie_name);
+    storeYoutubekey(movie_name);
     
 }
 
 
 function displayResults(movieData){
+    // console.log(movieData);
     let movie_pic = secureURL + photoSize+ movieData.poster_path;
     movieArea.innerHTML+= `
         <div class = "movie modal-open">
@@ -187,28 +205,29 @@ async function moreDetail(movie){
 
 //open and close out model
 document.addEventListener('click', function (event) {
+    if (event.target.matches('.modal')) {
+		// Run your code to close a modal
+        modal.style.display = "none";
+	}
     const movieName  = event.target.alt;
-    moreDetail(movieName);
-    console.log(movieInfo[event.target.alt]);
+    const youtubeKey = movieInfo[movieName].youtubeKey;
     const movieRun   = `${movieInfo[event.target.alt].runtime}`;
+    const movieRelease   = `${movieInfo[event.target.alt].release_date}`;
+    const movieRating    = movieInfo[event.target.alt].average_votes;
     let   genreStr   = ``;
     movieInfo[event.target.alt].genres.forEach(element => {
-        genreStr += `${element.name}`
+        genreStr += `${element.name} `
     });
-    console.log(genreStr);
     
 	if (event.target.matches('.modal-open')) {
 		// Run your code to open a modal
         modal.style.display = "block";
-        modalText.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/gmRKv7n2If8" class ="embed" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        modalText.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${youtubeKey}" class ="embed" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         modalText.innerHTML += `<h4 class= "movieName">${movieName}</h4>`;
+        modalText.innerHTML += `<h4 class= "movieName">${movieRun} min | ${movieRelease} | ${genreStr} |⭐${movieRating} </h4>`;
         modalText.innerHTML += movieInfo[event.target.alt].description
 	}
 
-	if (event.target.matches('.modal')) {
-		// Run your code to close a modal
-        modal.style.display = "none";
-	}
 
 }, false);
 
@@ -216,4 +235,13 @@ document.addEventListener('click', function (event) {
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
+}
+
+
+async function storeYoutubekey(movieName){
+    const movieId = movieInfo[movieName].id
+    const movieVids = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}`;
+    const response     = await fetch(movieVids);
+    const responseData = await response.json();
+    movieInfo[movieName]['youtubeKey'] = responseData.results[0].key;
 }
